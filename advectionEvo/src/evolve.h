@@ -21,6 +21,7 @@ class evolve
   evolve(grid*, double, double  );
   ~evolve();
   void evolveIt();
+  void evolveItOmp();
   void calc_flux(int, int, int);
 };
 
