@@ -1,11 +1,13 @@
 GSLLIBS      := $(shell gsl-config --libs)
+OMPFLAGS	 := -fopenmp
+OMPLIBS		 := -lgomp
 
 CXX           = g++
-CXXFLAGS      = -Wall -fPIC -O3 -march=native
+CXXFLAGS      = -Wall -fPIC -O3 -march=native $(OMPFLAGS)
 LD            = g++
-LDFLAGS       = -O3 -march=native
+LDFLAGS       = -O3 -march=native $(OMPFLAGS)
 
-LIBS          = $(SYSLIBS) $(GSLLIBS)
+LIBS          = $(SYSLIBS) $(GSLLIBS) $(OMPLIBS)
 
 vpath %.cpp src
 objdir     = obj
