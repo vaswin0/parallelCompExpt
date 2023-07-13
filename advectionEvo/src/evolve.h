@@ -20,8 +20,10 @@ class evolve
 
   evolve(grid*, double, double  );
   ~evolve();
-  void evolveIt();
-  void calc_flux(int, int, int);
+
+__host__ __device__ void calc_flux(int, int, int);
+__host__ __device__ void getCellUpdatRho(int, int, int);
+__host__ __device__ void getCellClearFlux(int, int, int);
 };
 
 
