@@ -7,27 +7,6 @@ evolve::evolve(grid* gr_, double tau_ , double dt_):gr(gr_), tau(tau_), dt(dt_){
 evolve::~evolve(){
 }
 
-void evolve::evolveIt(){
-
-  for(int ix=0; ix<gr->get_nx(); ix++ )
-    for(int iy=0; iy<gr->get_ny(); iy++ )
-      for(int iz=0; iz<gr->get_nz(); iz++ ){
-     calc_flux(ix,iy,iz);
-  }
-
- 
-  for(int ix=0; ix<gr->get_nx(); ix++ )
-    for(int iy=0; iy<gr->get_ny(); iy++ )
-      for(int iz=0; iz<gr->get_nz(); iz++ ){
-        gr->get_cell(ix,iy,iz)->update_rho() ; 
-        gr->get_cell(ix,iy,iz)->clear_flux() ; 
-   }
-
-  tau += dt ; 
-
-
-}
-
 
 void evolve::calc_flux(int ix, int iy, int iz){
 
@@ -38,3 +17,19 @@ void evolve::calc_flux(int ix, int iy, int iz){
  gr->get_cell(ix,iy,iz)->add_flux(flux2) ; 
 
 }
+
+
+__host__ __device__ void evolve::getCellUpdateRho(int ix, int iy, int iz){
+
+
+	gr->get_cell(ix, iy, iz)->update_rho();
+
+	}
+
+
+__host__ __device__ void evolve::getCellClearFlux(int ix,     int iy, int iz){
+
+	gr->get_cell(ix, iy, iz)->clear_flux();
+
+
+	}
