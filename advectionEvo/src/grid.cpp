@@ -12,13 +12,15 @@ grid::grid(double xmin_, double xmax_, int nx_, double ymin_, double ymax_, int 
    zmax   = zmax_ ; 
    nz     = nz_   ;
 
-   Cell = new cell[nx * ny * nz];
+   //Cell = new cell[nx * ny * nz];
+   cudaMallocManaged(&Cell, nx*ny*nz*sizeof(Cell[0]));
     
 }
 
 
 grid::~grid(){
-   delete[] Cell;  // free the RAM
+   //delete[] Cell;  // free the RAM
+   cudaFree(Cell);
 }
 
 
@@ -36,4 +38,14 @@ cell* grid::get_cell(int ix, int iy, int iz){
   return &Cell[ix + nx * iy + nx * ny * iz];
 }
 
+std::ostream& operator<<(std::ostream &os, const grid &gr){
 
+	for(int i = 0; i <= gr.nx*gr.ny*gr.nz; ++i){
+
+		std::cout<<gr.Cell[i];
+
+		}
+
+	return os;
+
+	}
