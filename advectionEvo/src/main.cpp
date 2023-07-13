@@ -1,26 +1,34 @@
 #include <iostream>
-#include <fstream>
-#include <iomanip>
-#include <string>
-#include <sstream>
-#include <chrono>
-#include <cmath>
+//#include "eos.h"
 #include "cell.h"
 #include "grid.h"
 #include "init.h"
-#include "eos.h"
 #include "evolve.h"
 
-using std::cout;
-using std::endl;
-using namespace std::chrono;
+const int N = 1000000;
 
 
-int main(int argc, char **argv)
-{
+__global__ void evolvee(evolve *Ev){
+   int i= blockIdx.x*blockDim.x + threadIdx.x;
+   if(i<N){
+		        
+        Ev->calc_flux(i, 0,0);
+		__syncthreads();
+		Ev->getCellUpdateRho(i, 0,0);
+		__syncthreads();
+		Ev->getCellClearFlux(i,0,0);
+
+            }
+        }			
+
+
+
+
+int main(){
+
   double xmin = -12 ; 
   double xmax =  12 ;
-  int    nx   =  241 ;  
+  int    nx   = N;  
   double ymin = 0 ; 
   double ymax = 0 ;
   int    ny   = 1 ;  
@@ -28,65 +36,34 @@ int main(int argc, char **argv)
   double zmax = 0 ;
   int    nz   = 1 ;  
 
-  // setting up the eos //
-  eos* EoS = new eos();
+grid  Gr = grid(xmin, xmax, nx, ymin, ymax, ny, zmin, zmax, nz );
+  
+ grid* pGr;
 
-  // setting up the grid //
-  grid* gr = new grid(xmin, xmax, nx, ymin, ymax, ny, zmin, zmax, nz );
-
-  // setting up the initial condition //
-  init* in = new init(gr);
-  in->set_init() ; 
-
-  std::ofstream file ;
-  file.open("init_dist.dat");
-  for(int ix=0; ix<gr->get_nx(); ix++ )
-    for(int iy=0; iy<gr->get_ny(); iy++ )
-      for(int iz=0; iz<gr->get_nz(); iz++ ){
-      file << gr->get_cell_x_cordinate(ix,iy,iz) << "  "
-           << gr->get_cell_y_cordinate(ix,iy,iz) << "  "
-           << gr->get_cell_z_cordinate(ix,iy,iz) << "  "
-           << gr->get_cell(ix,iy,iz)->get_rho() 
-           << std::endl ;
-  }
-  file.close();
+ cudaMallocManaged(&pGr, sizeof(grid));
+ *pGr = Gr;
 
 
-  evolve* ev = new evolve(gr, 1.0, 0.01);
+init *in = new init(pGr);
+in->set_init();
 
-  for(int it=0; it < 3000; it++){
-    ev->evolveIt() ; 
-  }
-
-
-  file.open("final_dist.dat");
-  for(int ix=0; ix<gr->get_nx(); ix++ )
-    for(int iy=0; iy<gr->get_ny(); iy++ )
-      for(int iz=0; iz<gr->get_nz(); iz++ ){
-      file << gr->get_cell_x_cordinate(ix,iy,iz) << "  "
-           << gr->get_cell_y_cordinate(ix,iy,iz) << "  "
-           << gr->get_cell_z_cordinate(ix,iy,iz) << "  "
-           << gr->get_cell(ix,iy,iz)->get_rho() 
-           << std::endl ;
-  }
-  file.close();
+std::cout<<Gr<<std::endl;
 
 
-  delete in  ; 
-  delete gr  ; 
-  delete EoS ; 
-  return 0;
+
+evolve Ev = evolve(pGr, 1.0,0.01);
+evolve* pEv;
+cudaMallocManaged(&pEv, sizeof(evolve));
+*pEv = Ev;
+
+
+evolvee<<<4,26>>>(pEv);
+cudaDeviceSynchronize();
+            //pR->displayArray();
+
+std::cout<<Gr;
+return 0;
+
+
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
