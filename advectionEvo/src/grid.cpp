@@ -13,8 +13,9 @@ grid::grid(double xmin_, double xmax_, int nx_, double ymin_, double ymax_, int 
    nz     = nz_   ;
 
    //Cell = new cell[nx * ny * nz];
-   cudaMallocManaged(&Cell, nx*ny*nz*sizeof(Cell[0]));
-    
+   cudaError_t err = cudaMallocManaged(&Cell, nx*ny*nz*sizeof(Cell[0]));
+    if (err ! = cudaSuccess){
+		std::cout << "Memory Allocation Failed" <<std::endl;
 }
 
 
