@@ -5,7 +5,7 @@
 #include "init.h"
 #include "evolve.h"
 
-const int N = 1000000;
+const int N = 50;
 
 
 __global__ void evolvee(evolve *Ev){
@@ -56,9 +56,10 @@ evolve* pEv;
 cudaMallocManaged(&pEv, sizeof(evolve));
 *pEv = Ev;
 
-
-evolvee<<<4,26>>>(pEv);
+for(int i = 0; i < 100; ++i){
+evolvee<<<4,15>>>(pEv);
 cudaDeviceSynchronize();
+}
             //pR->displayArray();
 
 std::cout<<Gr;
