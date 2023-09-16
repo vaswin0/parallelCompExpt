@@ -1,0 +1,31 @@
+#:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#:::                                                                                           :::
+#:::  Set your input parameters here for hydro simulation.                                     :::
+#:::  The code will not read any line of this file starting with symbol "#" or any empty line. :::
+#:::                                                                                           :::
+#:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+#Hydro grid setup :
+#[Info] set etamax = +1E-15, etamin =-1E-15 and neta = 1 for 2+1D evolution
+xmax  +10.0 
+xmin  -10.0 
+ymax  +10.0
+ymin  -10.0
+etamax  +1e-15
+etamin  -1e-15
+nx  201
+ny  201
+neta 1
+
+
+#dtau, hydro starting time, max run time of hydro :
+dtau 0.01
+tau0 1.0
+tauMax  10.0
+
+# :: END :: #
+
+
