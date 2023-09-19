@@ -16,9 +16,9 @@ class init
 
   public:
 
-  init(grid* );
-  ~init();
-  void set_init();
+__host__ __device__  init(grid* );
+__host__ __device__  ~init();
+__host__ __device__  void set_init();
 
 };
 

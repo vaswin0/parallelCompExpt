@@ -4,70 +4,58 @@
 #include "grid.h"
 #include "init.h"
 #include "evolve.h"
-
+using namespace std;
 const int N = 50;
-
-__device__ grid Gr;
-__device__ init in;
-__device__ evolve Ev;
-
-
-
-__global__ void evolvee(){
-   int i= blockIdx.x*blockDim.x + threadIdx.x;
-   if(i<N){
-		        
-        Ev.calc_flux(i, 0,0);
-		__syncthreads();
-		Ev.getCellUpdateRho(i, 0,0);
-		__syncthreads();
-		Ev.getCellClearFlux(i,0,0);
-
-            }
-        }			
-
-
-
+//__device__ grid Gr = grid(-12,12,50,0,0,1,0,0,1);
 
 int main(){
+	
+	int nx = N;
+	int ny = 1;
+	int nz = 1;
 
-	  double xmin = -12 ; 
-	  double xmax =  12 ;
-	  int    nx   = N;  
-	  double ymin = 0 ; 
-	  double ymax = 0 ;
-	  int    ny   = 1 ;  
-	  double zmin = 0 ; 
-	  double zmax = 0 ;
-	  int    nz   = 1 ;  
-
-	  grid  Gr = grid(xmin, xmax, nx, ymin, ymax, ny, zmin, zmax, nz );
-	  
-	  grid* pGr;
-
-	 cudaMallocManaged(&pGr, sizeof(grid));
-	 *pGr = Gr;
+	cell *pCell;
+	
 
 
-	init *in = new init(pGr);
-	in->set_init();
+	
+	size_t cellSize = nx*ny*nz*sizeof(cell);
 
-	std::cout<<Gr<<std::endl;
+	cudaMalloc(&pCell, cellSize);  cout<<"cudaMalloc(&pCell, cellSize) worked"<<endl;
+
+	grid Gr = grid(-12,12,N,0,0,1,0,0,1);
+	cout << Gr.Cell <<endl;
+	Gr.Cell = pCell; cout<<Gr.Cell<<endl;
+	
+	grid *pGr_d;
+
+	
+	std::cout<<4;
+
+	init *in = new init(&Gr); cout<<"made init obj"<<endl;
+	in->set_init(); cout<< "initialized" <<endl;
+//	std::cout<<Gr<<std::endl;
+ 	std::cout<<5;
+
+//	evolve Ev = evolve(pGr_d, 1.0,0.01);
 
 
+	size_t gridSize = sizeof(grid);
+	cudaMalloc(&pGr_d, gridSize);
+	cudaMemcpy(pGr_d, &Gr,gridSize, cudaMemcpyHostToDevice);
+	
+	evolve Ev = evolve(pGr_d, 1.0,0.01);
+	evolve* pEv_d;
+	size_t evoSz = sizeof(Ev);
+	cudaMalloc(&pEv_d, evoSz);
+	cudaMemcpy(pEv_d, &Ev, evoSz, cudaMemcpyHostToDevice);
 
-	evolve Ev = evolve(pGr, 1.0,0.01);
-	evolve* pEv;
-	cudaMallocManaged(&pEv, sizeof(evolve));
-	*pEv = Ev;
 
-	for(int i = 0; i < 100; ++i){
-	evolvee<<<4,15>>>(pEv);
-	cudaDeviceSynchronize();
-	}
-		    //pR->displayArray();
-
-	std::cout<<Gr;
+//	evolvee<<<1,1>>>(pEv_d);
+	//std::cout<<122;
+//	cudaDeviceSynchronize();
+	
+		   
 	return 0;
 
 

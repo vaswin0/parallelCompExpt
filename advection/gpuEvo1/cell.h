@@ -17,13 +17,13 @@ class cell
 
   public:
 
-  cell();
-  ~cell();
-  void set_rho(double  );
-  double get_rho( );
-  void add_flux(double ) ; 
-  void clear_flux() ; 
-  void update_rho() ; 
+__host__ __device__   cell();
+__host__ __device__   ~cell();
+__host__ __device__   void set_rho(double  );
+__host__ __device__   double get_rho( );
+__host__ __device__   void add_flux(double ) ; 
+__host__ __device__   void clear_flux() ; 
+__host__ __device__   void update_rho() ; 
 
 };
 
