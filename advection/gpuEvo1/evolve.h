@@ -20,6 +20,7 @@ class evolve
   
 __host__ __device__ inline double get_tau() {return tau;};
 __host__ __device__   evolve(grid*, double, double  );
+__host__ __device__ evolve();
 __host__ __device__   ~evolve();
 //__host__ __device__   void evolveIt();
 __host__ __device__   void calc_flux(int, int, int);
