@@ -4,6 +4,10 @@
 __host__ __device__ evolve::evolve(grid* gr_, double tau_ , double dt_):gr(gr_), tau(tau_), dt(dt_){
 }
 
+
+
+__host__ __device__ evolve::evolve(){gr = NULL;tau = 1.0; dt = 0.01;};
+
 __host__ __device__ evolve::~evolve(){
 }
 /*
@@ -36,5 +40,5 @@ __host__ __device__ void evolve::calc_flux(int ix, int iy, int iz){
  double flux2 =   adv_vel * dt * gr->get_cell(ix-1,iy,iz)->get_rho() / 2. / gr->get_dx() ;   
  gr->get_cell(ix,iy,iz)->add_flux(flux1) ; 
  gr->get_cell(ix,iy,iz)->add_flux(flux2) ; 
-
+printf("%f", flux1 + flux2);
 }
