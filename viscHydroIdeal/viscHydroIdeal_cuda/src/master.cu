@@ -33,10 +33,19 @@ void master::initialize()
 {
 
   // make the grid
-  g = new grid(IDB,CN,eos);
+  //g = new grid(IDB,CN,eos);
+  cudaMallocManaged(&g, sizeof(grid));
   g->make_grid();
 
-  ic = new init(IDB);
+  //ic = new init(IDB);
+
+  init in = init(IDB);
+  in* ic;
+  cudaMallocManaged(&ic, sizeof(init));
+  *ic = in;
+
+
+
   ic->set_init(g,eos);
     
 }
