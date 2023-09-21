@@ -13,7 +13,7 @@ grid::grid(double xmin_, double xmax_, int nx_, double ymin_, double ymax_, int 
    nz     = nz_   ;
 
    //Cell = new cell[nx * ny * nz];
-   cudaMallocManaged(&Cell, nx*ny*nz*sizeof(Cell[0]));
+   cudaMallocManaged(&Cell, nx*ny*nz*sizeof(cell));
     
 }
 

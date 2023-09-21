@@ -23,11 +23,11 @@ class grid
     int ny ; 
     int nz ; 
     
-    //cell* Cell ; 
+    cell* Cell ; 
 
   public:
 
-  cell* Cell;
+  
 
 __host__    grid(double xmin_, double xmax_, int nx_, double ymin_, double ymax_, int ny_ , double zmin_, double zmax_, double nz_);
 __host__    ~grid();
