@@ -52,13 +52,13 @@ void cell::set_prim_var(EoS* eos,double tau, double _eps,double _nb,
                                  double _nq, double _ns, double _vx, double _vy, double _vz)
 {
 
-cout<< "in set_prim_var"<<endl;
+
 
   double gamma2 = 1.0/(1.0- (_vx*_vx+_vy*_vy+_vz*_vz));
   double gamma = sqrt(gamma2);
-  cout<< "get pressure"<<endl;
+
   double p = eos->pressure(_eps,_nb, _nq, _ns);
-    cout<< "got pressure"<<endl;
+
   Q[T_] = tau*(((_eps + p)*gamma2) - p);
   Q[X_] = tau*((_eps+p)*gamma2*_vx);
   Q[Y_] = tau*((_eps+p)*gamma2*_vy);

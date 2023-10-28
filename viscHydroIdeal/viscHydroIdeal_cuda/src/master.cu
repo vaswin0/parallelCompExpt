@@ -13,8 +13,8 @@ master::master(idb* _IDB)
   IDB = _IDB;
 //  eos = new EoS0();
  EoS0 eoss = EoS0();
-  cudaMallocManaged(&eos, sizeof(EoS0));
-  *eos = eoss;
+ cudaMallocManaged(&eos, sizeof(EoS0));
+ memcpy(eos,&eoss, sizeof(EoS0));
   //CN = new cnvrt();
   cudaMallocManaged(&CN, sizeof(cnvrt));
 
@@ -42,8 +42,8 @@ cout<< "in class master, initializing" <<endl;
   //g = new grid(IDB,CN,eos);
   grid gr = grid(IDB,CN,eos);
   cudaMallocManaged(&g, sizeof(grid));
-  *g = gr;
-  cout<< "making grid" <<endl;
+  memcpy(g,&gr, sizeof(grid));
+
   g->make_grid();
 
   //ic = new init(IDB);
@@ -51,12 +51,12 @@ cout<< "in class master, initializing" <<endl;
   init in = init(IDB);
   
   cudaMallocManaged(&ic, sizeof(init));
-  *ic = in;
-cout<< "printing from eos" <<endl;
-	cout<<eos->pressure(1.0,1.0,1.0,1.0)<<endl;
+  memcpy(ic,&in, sizeof(init));
 
 
-  //ic->set_init(g,eos);
+
+
+  ic->set_init(g,eos);
     
 }
 
@@ -72,7 +72,7 @@ void master::run_hydro(){
   
   
   cudaMallocManaged(&h, sizeof(hydro));
-  *h = hy;
+  memcpy(h,&hy, sizeof(hydro));
   
   
   int nstep = (IDB->tauMax - IDB->tau0)/IDB->dtau + 1;

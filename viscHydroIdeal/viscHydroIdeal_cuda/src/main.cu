@@ -52,15 +52,13 @@ cudaMallocManaged(&reader, sizeof(read_id));
 
   master *pHd;
   cudaMallocManaged(&pHd, sizeof(master));
-  *pHd = head;
-  //pHd->initialize();
-    //  cout <<"****initialized from head***"<<endl;
 
- //EoS0 eoss = EoS0();
- EoS0* eos;
-  cudaMallocManaged(&eos, sizeof(EoS0));
-  *eos = eoss;
-  cout<<eos->pressure(1.0,1.0,1.0,1.0)<<endl;
+  memcpy(pHd,&head, sizeof(master));
+  pHd->initialize();
+   cout <<"****initialized from head***"<<endl;
+   pHd->run_hydro();
+
+ 
 
   //head->initialize(); // initialize
  // head.run_hydro(); // run hydro 
