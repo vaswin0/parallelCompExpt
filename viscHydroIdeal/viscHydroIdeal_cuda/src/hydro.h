@@ -9,11 +9,11 @@
 #pragma once
 
 #include <cmath>
-#include "TMath.h"
+//#include "TMath.h"
 #include "cnvrt.h"
 #include "grid.h"
 #include "cell.h"
-#include "TMath.h"
+//#include "TMath.h"
 #include "global.h"
 #include <fstream>
 

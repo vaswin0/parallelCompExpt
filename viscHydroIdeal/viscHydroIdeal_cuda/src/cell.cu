@@ -1,4 +1,5 @@
 #include "cell.h"
+#include <cmath>
 
 
 
@@ -8,7 +9,8 @@ using std::endl;
 
 // cell quantities
 cell::cell()
-{
+{  
+cudaMallocManaged(&CN, sizeof(cnvrt));
   for(int i = 0; i<7; i++)   //tau*T^00, tau*T^0x, tau*T^0y,
      {                       //tau*tau*T^0z, tau*nb, tau*nq, tau*ns (7 conserved quantities)
 	Q[i] = 0.;
@@ -49,9 +51,14 @@ double cell::minmod(double a, double b) {
 void cell::set_prim_var(EoS* eos,double tau, double _eps,double _nb,
                                  double _nq, double _ns, double _vx, double _vy, double _vz)
 {
+
+cout<< "in set_prim_var"<<endl;
+
   double gamma2 = 1.0/(1.0- (_vx*_vx+_vy*_vy+_vz*_vz));
-  double gamma = TMath::Sqrt(gamma2);
+  double gamma = sqrt(gamma2);
+  cout<< "get pressure"<<endl;
   double p = eos->pressure(_eps,_nb, _nq, _ns);
+    cout<< "got pressure"<<endl;
   Q[T_] = tau*(((_eps + p)*gamma2) - p);
   Q[X_] = tau*((_eps+p)*gamma2*_vx);
   Q[Y_] = tau*((_eps+p)*gamma2*_vy);

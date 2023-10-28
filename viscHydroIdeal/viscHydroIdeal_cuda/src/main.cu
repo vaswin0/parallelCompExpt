@@ -7,6 +7,8 @@
 #include "idb.h"
 #include "read_id.h"
 #include "master.h"
+#include <fstream>
+
 
 using std::cout;
 using std::endl;
@@ -29,8 +31,15 @@ int main(int argc, char **argv)
       exit(1);
      }
 
-  read_id* reader = new read_id(); 
-  idb *IDB = new idb;
+read_id* reader;
+cudaMallocManaged(&reader, sizeof(read_id));
+
+
+  //read_id* reader = new read_id(); 
+  //idb *IDB = new idb;
+
+  idb *IDB;
+  cudaMallocManaged(&IDB, sizeof(idb));
   reader->read_id_from_file(IDB, input_file_name); // read input data base and store it.
   int event_no = atof(event_no_s) ;
 
@@ -38,20 +47,28 @@ int main(int argc, char **argv)
 
 
   master head =  master(IDB);
-  head.initialize();
+
+  //head.initialize();
+
   master *pHd;
-  cudaMallocManaged(&pHd, sizeof(evolve));
-  *pHd = head
+  cudaMallocManaged(&pHd, sizeof(master));
+  *pHd = head;
+  //pHd->initialize();
+    //  cout <<"****initialized from head***"<<endl;
 
-
+ //EoS0 eoss = EoS0();
+ EoS0* eos;
+  cudaMallocManaged(&eos, sizeof(EoS0));
+  *eos = eoss;
+  cout<<eos->pressure(1.0,1.0,1.0,1.0)<<endl;
 
   //head->initialize(); // initialize
-  head->run_hydro(); // run hydro 
+ // head.run_hydro(); // run hydro 
  
 
  
 
- delete head;
+cudaFree(pHd);
  return 0;
 }
 

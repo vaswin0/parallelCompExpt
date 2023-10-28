@@ -1,5 +1,5 @@
 #include "eos0.h"
-
+#include <cmath>
 
 EoS0::EoS0(){    cout<<"\n[Info] allocating ideal EoS...\n"<<endl;}
 EoS0::~EoS0(){}
@@ -28,11 +28,11 @@ double EoS0::temperature( double eps,double _nb, double _nq, double _ns) // T in
 }
 }
 
-double EoS0::cs(double eps ,double _nb, double _nq, double _ns){return 1./TMath::Sqrt(3);}
+double EoS0::cs(double eps ,double _nb, double _nq, double _ns){return 1./sqrt(3);}
 
 double EoS0::cs2(double eps ,double _nb, double _nq, double _ns){return 1./3.;}
 
-double EoS0::cs_(){return 1./TMath::Sqrt(3);} // HLLE Ideal flux will call me .
+double EoS0::cs_(){return 1./sqrt(3);} // HLLE Ideal flux will call me .
  
 double EoS0::cs2_(){return 1./3.;}  // HLLE Ideal flux will call me .
 

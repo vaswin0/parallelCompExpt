@@ -1,8 +1,8 @@
 #include <iostream>
-#include "TMath.h"
+//#include "TMath.h"
 #include "cnvrt.h"
 #include "global.h"
-
+#include <cmath>
 
 using std::cout;
 using std::endl;
@@ -127,7 +127,7 @@ void cnvrt::LRF_2_CALC(double eps, double p, double nb, double nq, double ns, do
                  double vy, double vz, double* Q)  //converts energy density, velocity and number density to E,Mx,My
 {
   double gamma2 = 1.0/(1.0- (vx*vx+vy*vy+vz*vz));
-  double gamma = TMath::Sqrt(gamma2);
+  double gamma = sqrt(gamma2);
   Q[T_] = ((eps + p)*gamma2) - p;
   Q[X_] = (eps+p)*gamma2*vx;
   Q[Y_] = (eps+p)*gamma2*vy;

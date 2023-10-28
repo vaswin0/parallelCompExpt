@@ -1,6 +1,6 @@
 #pragma once
 #include<iostream>
-#include "TMath.h"
+//#include "TMath.h"
 #include<cmath>
 #include<fstream>
 #include<string>

@@ -1,4 +1,6 @@
 #include "master.h"
+#include "eos0.h"
+#include "eos.h"
 
 master::master(idb* _IDB)
 {
@@ -10,19 +12,23 @@ master::master(idb* _IDB)
 
   IDB = _IDB;
 //  eos = new EoS0();
-  cudaMallocManaged(&eos, sizeof(Eos0));
+ EoS0 eoss = EoS0();
+  cudaMallocManaged(&eos, sizeof(EoS0));
+  *eos = eoss;
   //CN = new cnvrt();
-  cudaMallocManaged(&CN, sizeof(cnvrt)
+  cudaMallocManaged(&CN, sizeof(cnvrt));
 
   
 }
 
 master::~master()
 {
-  delete IDB;
+ // delete IDB;
+ cudaFree(IDB);
  // delete eos;
  cudaFree(eos);
-  delete h;
+  //delete h;
+  cudaFree(h);
   //delete g;
  // delete CN;
  cudaFree(g);
@@ -31,22 +37,26 @@ master::~master()
 
 void master::initialize()
 {
-
+cout<< "in class master, initializing" <<endl;
   // make the grid
   //g = new grid(IDB,CN,eos);
+  grid gr = grid(IDB,CN,eos);
   cudaMallocManaged(&g, sizeof(grid));
+  *g = gr;
+  cout<< "making grid" <<endl;
   g->make_grid();
 
   //ic = new init(IDB);
 
   init in = init(IDB);
-  in* ic;
+  
   cudaMallocManaged(&ic, sizeof(init));
   *ic = in;
+cout<< "printing from eos" <<endl;
+	cout<<eos->pressure(1.0,1.0,1.0,1.0)<<endl;
 
 
-
-  ic->set_init(g,eos);
+  //ic->set_init(g,eos);
     
 }
 
@@ -56,7 +66,15 @@ void master::run_hydro(){
 
   double current_tau ; 
   
-  h = new hydro(eos, g , IDB , IDB->tau0 , IDB->dtau, CN);
+  //h = new hydro(eos, g , IDB , IDB->tau0 , IDB->dtau, CN);
+  
+  hydro hy =  hydro(eos, g , IDB , IDB->tau0 , IDB->dtau, CN);
+  
+  
+  cudaMallocManaged(&h, sizeof(hydro));
+  *h = hy;
+  
+  
   int nstep = (IDB->tauMax - IDB->tau0)/IDB->dtau + 1;
   std::cout << "Hydro evolution ..." << std::endl ;
   std::cout << "evolution till max. tau : " << IDB->tauMax << std::endl ;   

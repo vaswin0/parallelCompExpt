@@ -33,6 +33,7 @@ int main(int argc, char **argv)
 
   // setting up the grid //
   grid* gr = new grid(xmin, xmax, nx, ymin, ymax, ny, zmin, zmax, nz );
+  std::cout<<"************"<< gr->get_nx()<< "*****************";
 
   // setting up the initial condition //
   init* in = new init(gr);
@@ -54,7 +55,7 @@ int main(int argc, char **argv)
 
   evolve* ev = new evolve(gr, 1.0, 0.01);
 
-  for(int it=0; it < 3000; it++){
+  for(int it=0; it < 30; it++){
     ev->evolveIt() ; 
   }
 

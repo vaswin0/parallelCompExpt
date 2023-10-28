@@ -3,7 +3,7 @@
                 //only once even if the programmer includes it multiple times during a compilation.
                 // https://www.geeksforgeeks.org/pragma-directive-in-c-c/
 #include<iostream>
-#include "TMath.h"
+//#include "TMath.h"
 #include<cmath>
 
 using std::cin;

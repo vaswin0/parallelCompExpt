@@ -10,7 +10,8 @@ grid::grid(idb* _IDB, cnvrt* _CN, EoS* _eos)
 
 grid::~grid()
 {
- delete[] Cell; 
+// delete[] Cell; 
+cudaFree(Cell);
 }
 
 void grid::make_grid()
