@@ -19,8 +19,10 @@ void init::set_init(grid* g, EoS* eos){
 
   double tau = IDB->tau0 ; 
 
-  cell* c;
+  cell dummy = cell();
+  cell *c; 
   cudaMallocManaged(&c, sizeof(cell));
+  memcpy(c, &dummy, sizeof(cell));
 
   for(int ix=0; ix<g->get_nx(); ix++ )
     for(int iy=0; iy<g->get_ny(); iy++ )

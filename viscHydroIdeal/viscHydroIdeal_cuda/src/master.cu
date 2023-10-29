@@ -16,7 +16,9 @@ master::master(idb* _IDB)
  cudaMallocManaged(&eos, sizeof(EoS0));
  memcpy(eos,&eoss, sizeof(EoS0));
   //CN = new cnvrt();
+  cnvrt cc = cnvrt();
   cudaMallocManaged(&CN, sizeof(cnvrt));
+   memcpy(CN,&cc, sizeof(cnvrt));
 
   
 }

@@ -10,7 +10,10 @@ using std::endl;
 // cell quantities
 cell::cell()
 {  
+cnvrt dummy = cnvrt();
 cudaMallocManaged(&CN, sizeof(cnvrt));
+memcpy(CN, &dummy, sizeof(cnvrt));
+
   for(int i = 0; i<7; i++)   //tau*T^00, tau*T^0x, tau*T^0y,
      {                       //tau*tau*T^0z, tau*nb, tau*nq, tau*ns (7 conserved quantities)
 	Q[i] = 0.;

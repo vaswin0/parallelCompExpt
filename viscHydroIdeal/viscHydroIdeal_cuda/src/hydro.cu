@@ -36,7 +36,12 @@ void hydro::evolve()
     for(int iz = 0; iz<f->get_neta(); iz++)
       for(int ix = 0; ix<f->get_nx(); ix++)
 	{      
-	  cell *c = f->get_cell(ix, iy, iz );
+	  cell dummy = cell();
+	  cell *c; 
+	  cudaMallocManaged(&c, sizeof(cell));
+	  memcpy(c, &dummy, sizeof(cell));
+	  
+	  c = f->get_cell(ix, iy, iz );
 	  c->save_Q_prev();
 	  c->clear_flux();
 	}
@@ -73,7 +78,15 @@ if(f->get_neta() > 1) // don,t calculate z-flux in 2+1D hydro
     for(int iz = 0; iz<f->get_neta(); iz++)
       for(int ix = 0; ix< f->get_nx(); ix++)
         {
-	  cell *c = f->get_cell(ix, iy,iz);
+        
+        
+	cell dummy = cell();
+	  cell *c; 
+	  cudaMallocManaged(&c, sizeof(cell));
+	  memcpy(c, &dummy, sizeof(cell));
+	  
+	  c = f->get_cell(ix, iy,iz);
+	  
 	  sourcestep( PREDICT,  ix,  iy, iz,  tau);
 	  c->update_Q_to_Qh_by_flux();
 	  c->clear_flux();
@@ -111,7 +124,13 @@ if(f->get_neta()> 1) // don,t calculate z-flux in 2+1D hydro
     for(int iz = 0; iz< f->get_neta(); iz++)
       for(int ix = 0; ix< f->get_nx(); ix++)
 	{
-	  cell *c = f->get_cell(ix, iy,iz); 
+	cell dummy = cell();
+	  cell *c; 
+	  cudaMallocManaged(&c, sizeof(cell));
+	  memcpy(c, &dummy, sizeof(cell));
+
+	  c = f->get_cell(ix, iy,iz); 
+	  
 	  sourcestep( CORRECT,  ix,  iy, iz, tau);
 	  c->update_by_flux();
 	  c->clear_flux();	  

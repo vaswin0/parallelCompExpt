@@ -30,16 +30,20 @@ int main(int argc, char **argv)
             "2nd argument - input filename"<<endl;
       exit(1);
      }
-
+read_id rid = read_id();
 read_id* reader;
 cudaMallocManaged(&reader, sizeof(read_id));
+memcpy(reader,&rid, sizeof(read_id));
+
 
 
   //read_id* reader = new read_id(); 
   //idb *IDB = new idb;
-
+idb iidb = idb();
   idb *IDB;
   cudaMallocManaged(&IDB, sizeof(idb));
+    memcpy(IDB,&iidb, sizeof(idb));
+  
   reader->read_id_from_file(IDB, input_file_name); // read input data base and store it.
   int event_no = atof(event_no_s) ;
 
@@ -54,6 +58,7 @@ cudaMallocManaged(&reader, sizeof(read_id));
   cudaMallocManaged(&pHd, sizeof(master));
 
   memcpy(pHd,&head, sizeof(master));
+  
   pHd->initialize();
    cout <<"****initialized from head***"<<endl;
    pHd->run_hydro();

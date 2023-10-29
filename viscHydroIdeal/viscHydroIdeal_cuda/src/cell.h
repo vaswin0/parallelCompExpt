@@ -42,7 +42,7 @@ private:
   
   
   cnvrt *CN;
-  //cudaMallocManaged(&CN, sizeof(cnvrt));
+
   
   public:
   cell();

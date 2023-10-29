@@ -117,7 +117,10 @@ void grid::make_grid()
   
   
   // now grid properties are fixed and it's ready to be made
-  Cell = new cell[nx * ny * neta];
+  //Cell = new cell[nx * ny * neta];
+  cell* celll = new cell[nx * ny * neta];
+  cudaMallocManaged(&Cell,nx*ny*neta* sizeof(cell));
+  memcpy(Cell,celll, nx*ny*neta*sizeof(cell));
 
 
 
@@ -162,7 +165,8 @@ void grid::make_grid()
 
 cell* grid::new_cell(int ix,int iy,int iz)
 {
-  cell* c1 = new cell();
+  cell* c1 ; //= new cell();
+  cudaMallocManaged(&c1, sizeof(cell));
   c1->set_pos(ix,iy,iz);
   return c1;
 }
