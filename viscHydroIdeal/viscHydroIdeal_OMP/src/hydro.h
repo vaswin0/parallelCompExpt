@@ -28,7 +28,8 @@ class hydro
 public:
   hydro(EoS* , grid* ,idb* ,double , double ,cnvrt*  );
   ~hydro();
-  void evolve();
+  void evolveSeq();
+  void evolvePrll();
   void hlle_flux(cell* left, cell* right, int direction, int mode);
   void sourcestep(int mode, int ix, int iy,int iz, double _tau);
   inline double get_tau() { return tau; }

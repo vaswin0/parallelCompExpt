@@ -29,8 +29,103 @@ void hydro::set_dtau(double deltaTau)
   }
 }
 
+void hydro::evolveSeq()
+{
 
-void hydro::evolve()
+  for(int iy = 0; iy<f->get_ny(); iy++)
+    for(int iz = 0; iz<f->get_neta(); iz++)
+      for(int ix = 0; ix<f->get_nx(); ix++)
+	{      
+	  cell *c = f->get_cell(ix, iy, iz );
+	  c->save_Q_prev();
+	  c->clear_flux();
+	}
+
+  // X-direction flux
+  for(int iy = 0; iy<f->get_ny(); iy++)
+    for(int iz = 0; iz<f->get_neta(); iz++)
+      for(int ix = 0; ix<f->get_nx()-1; ix++)
+	{
+	  hlle_flux(f->get_cell(ix,iy, iz), f->get_cell(ix+1,iy,iz), X_, PREDICT);
+	  // cout<<iy<<"\t"<<iz<<"\t"<<ix<<endl;
+	}
+  
+  // Y-direction flux
+  for(int iz = 0; iz<f->get_neta(); iz++)
+    for(int ix = 0; ix<f->get_nx(); ix++)
+      for(int iy = 0; iy<f->get_ny()-1; iy++)
+	{
+	  hlle_flux(f->get_cell(ix,iy,iz), f->get_cell(ix,iy+1,iz), Y_, PREDICT);
+	}
+  
+if(f->get_neta() > 1) // don,t calculate z-flux in 2+1D hydro
+{  
+  // Z-direction flux
+  for(int ix = 0; ix<f->get_nx(); ix++)
+    for(int iy = 0; iy<f->get_ny(); iy++)
+      for(int iz = 0; iz<f->get_neta() -1; iz++)
+	{
+	  hlle_flux(f->get_cell(ix,iy,iz), f->get_cell(ix,iy,iz+1), Z_, PREDICT);
+	}
+}  
+  
+  for(int iy = 0; iy<f->get_ny(); iy++)
+    for(int iz = 0; iz<f->get_neta(); iz++)
+      for(int ix = 0; ix< f->get_nx(); ix++)
+        {
+	  cell *c = f->get_cell(ix, iy,iz);
+	  sourcestep( PREDICT,  ix,  iy, iz,  tau);
+	  c->update_Q_to_Qh_by_flux();
+	  c->clear_flux();
+	}
+  
+  // X-direction flux
+  for(int iy = 0; iy<f->get_ny(); iy++)
+    for(int iz = 0; iz<f->get_neta(); iz++)
+      for(int ix = 0; ix<f->get_nx()-1; ix++)
+	{
+	  hlle_flux(f->get_cell(ix,iy, iz), f->get_cell(ix+1,iy,iz), X_, CORRECT);
+	}
+  
+  
+  // Y-direction flux
+  for(int iz = 0; iz<f->get_neta(); iz++)
+    for(int ix = 0; ix<f->get_nx(); ix++)
+      for(int iy = 0; iy<f->get_ny()-1; iy++)
+	{
+	  hlle_flux(f->get_cell(ix,iy,iz), f->get_cell(ix,iy+1,iz), Y_, CORRECT);
+	}
+  
+if(f->get_neta()> 1) // don,t calculate z-flux in 2+1D hydro
+{  
+  // Z-direction flux
+  for(int ix = 0; ix<f->get_nx(); ix++)
+    for(int iy = 0; iy<f->get_ny(); iy++)
+      for(int iz = 0; iz<f->get_neta()-1; iz++)
+	{
+	  hlle_flux(f->get_cell(ix,iy,iz), f->get_cell(ix,iy,iz+1), Z_, CORRECT);
+	}
+  
+}  
+  for(int iy = 0; iy <f->get_ny(); iy++)
+    for(int iz = 0; iz< f->get_neta(); iz++)
+      for(int ix = 0; ix< f->get_nx(); ix++)
+	{
+	  cell *c = f->get_cell(ix, iy,iz); 
+	  sourcestep( CORRECT,  ix,  iy, iz, tau);
+	  c->update_by_flux();
+	  c->clear_flux();	  
+	}
+  
+  tau = tau+dt;                 // tau increased
+  f->correct_imaginary_cells(); //boundary condition
+  
+   
+}
+
+
+
+void hydro::evolvePrll()
 {
 int NY = f->get_ny();
 int NZ = f->get_neta();

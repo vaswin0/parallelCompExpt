@@ -42,15 +42,25 @@ int main(int argc, char **argv)
   
 auto start_ = high_resolution_clock::now()    ;   
   
-  head->run_hydro(); // run hydro 
+  head->run_hydroPrll(); // run hydro 
   
 auto end_ = std::chrono::high_resolution_clock::now();
     
 std::chrono::duration<double> duration_ = end_ - start_;
  
-std::cout << "exctn time : " << duration_.count    () * 1000 << " milliseconds" << std::endl;
- 
+std::cout << "prallel execution time : " << duration_.count    () * 1000 << " milliseconds \n" << std::endl;
 
+
+auto start__ = high_resolution_clock::now()    ;   
+  
+  head->run_hydroSeq(); // run hydro 
+  
+auto end__ = std::chrono::high_resolution_clock::now();
+    
+std::chrono::duration<double> duration__ = end__ - start__;
+ 
+std::cout << "Seq execution time : " << duration__.count    () * 1000 << " milliseconds" << std::endl;
+ 
  delete head;
  return 0;
 }

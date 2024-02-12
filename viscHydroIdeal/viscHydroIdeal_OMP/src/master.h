@@ -27,7 +27,8 @@ public:
   master(idb* );
   ~master();
   void initialize();
-  void run_hydro();
+  void run_hydroPrll();
+  void run_hydroSeq();
   EoS* eos;
   idb* IDB;
   grid* g;

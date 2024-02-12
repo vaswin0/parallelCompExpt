@@ -37,7 +37,7 @@ void master::initialize()
 
 
 
-void master::run_hydro(){
+void master::run_hydroSeq(){
 
   double current_tau ; 
   
@@ -57,7 +57,33 @@ void master::run_hydro(){
     }
 
     // entire hydro evolution here
-    h->evolve();      
+    h->evolveSeq();      
+  }// step loop
+}
+
+
+
+void master::run_hydroPrll(){
+
+  double current_tau ; 
+  
+  h = new hydro(eos, g , IDB , IDB->tau0 , IDB->dtau, CN);
+  int nstep = (IDB->tauMax - IDB->tau0)/IDB->dtau + 1;
+  std::cout << "Hydro evolution ..." << std::endl ;
+  std::cout << "evolution till max. tau : " << IDB->tauMax << std::endl ;   
+  for(int istep=0; istep<nstep ; istep++){
+    current_tau =  IDB->tau0 + istep * IDB->dtau ;
+  
+    if(istep%10==0){ 
+    std::cout << "tau : " << current_tau << std::endl ;
+    } 
+
+    if(istep%100 == 0 ){
+      write_grid_info(current_tau) ; 
+    }
+
+    // entire hydro evolution here
+    h->evolvePrll();      
   }// step loop
 }
 
